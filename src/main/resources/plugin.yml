@@ -1,0 +1,6 @@
+main: ${PACKAGE}.${NAME}
+name: ${NAME}
+version: "${VERSION}"
+api-version: "26.2"
+author: mictali
+description: A builder's plugin adding ramps and wedges

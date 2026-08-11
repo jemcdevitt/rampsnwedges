@@ -1,0 +1,30 @@
+# Ramps and wedges
+
+debug: true
+
+# Physical implementation blocks.
+#
+# ramp-stair is sacrificed as the invisible collision/placement carrier for
+# all ramps while the generated resource pack is active. Its normal crafting
+# recipes are removed by the plugin.
+#
+# wedge-block is used only after a wedge is placed. BARRIER is recommended:
+# it is invisible, has full-block collision, has no normal recipe, and does
+# not cause adjacent solid block faces to be culled.
+carrier:
+  ramp-stair: RED_SANDSTONE_STAIRS
+  wedge-block: BARRIER
+
+# Every ordinary block listed here can be converted in the stonecutter into
+# one ramp and four wedge orientations. The same material supplies the visible
+# texture and, for wedges, its hardness/tool behavior when mined in Survival.
+#
+# The default generated model assumes minecraft:block/<material-name> is a
+# suitable single texture. Blocks with specialized multi-face textures may
+# render imperfectly; those can be handled with overrides in a future version.
+materials:
+  - OAK_PLANKS
+  - COBBLESTONE
+  - STONE
+  - STONE_BRICKS
+  - OBSIDIAN
