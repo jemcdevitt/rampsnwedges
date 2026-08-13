@@ -21,6 +21,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,11 +33,13 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.ToolComponent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 import rampsnwedges.block.BlockCatalog;
 import rampsnwedges.block.CustomBlockDefinition;
-import rampsnwedges.block.PlacedBlockStore;
 import rampsnwedges.item.CustomItemFactory;
+
+import static rampsnwedges.RampsNWedgesPlugin.LOG;
 
 /**
  * Supplies player-controlled breaking for barrier-backed wedges.
@@ -52,17 +55,15 @@ public class WedgeBreakListener implements Listener {
 	private final RampsNWedgesPlugin plugin;
 	private final BlockCatalog catalog;
 	private final CustomItemFactory itemFactory;
-	private final PlacedBlockStore placedBlocks;
 	private final WedgeDisplayManager wedgeDisplays;
+	private final Configuration config;
 	private final Map<UUID, BreakSession> sessions = new HashMap<>();
 
-	public WedgeBreakListener(RampsNWedgesPlugin plugin, BlockCatalog catalog,
-						  CustomItemFactory itemFactory, PlacedBlockStore placedBlocks,
-						  WedgeDisplayManager wedgeDisplays) {
+	public WedgeBreakListener(RampsNWedgesPlugin plugin, BlockCatalog catalog, CustomItemFactory itemFactory, Configuration config, WedgeDisplayManager wedgeDisplays) {
 		this.plugin = plugin;
 		this.catalog = catalog;
 		this.itemFactory = itemFactory;
-		this.placedBlocks = placedBlocks;
+		this.config = config;
 		this.wedgeDisplays = wedgeDisplays;
 	}
 
@@ -244,7 +245,6 @@ public class WedgeBreakListener implements Listener {
 	private void breakWedge(Player player, Block block, CustomBlockDefinition definition,
 						boolean dropItem) {
 		wedgeDisplays.remove(block);
-		placedBlocks.remove(block);
 		block.setType(Material.AIR, false);
 
 		if(dropItem) {
@@ -257,13 +257,22 @@ public class WedgeBreakListener implements Listener {
 		if(block == null) {
 			return null;
 		}
+		Material blockType = block.getType();
+		if(!blockType.equals(config.wedgeCarrier()))
+			return null;
 
-		Optional<String> storedId = placedBlocks.get(block);
-		if(storedId.isEmpty()) {
+		ItemDisplay display = wedgeDisplays.getWedgeAt(block);
+		if( display == null ) {
 			return null;
 		}
 
-		Optional<CustomBlockDefinition> found = catalog.find(storedId.get());
+		String storeId = display.getPersistentDataContainer().get(Constants.RNW_ID_KEY, PersistentDataType.STRING);
+		if( storeId == null ) {
+			LOG(0,"Wedge ItemDisplay does not have a RampsNWedges id");
+			return null;
+		}
+
+		Optional<CustomBlockDefinition> found = catalog.find(storeId);
 		if(found.isEmpty() || !found.get().shape().isWedge()) {
 			return null;
 		}

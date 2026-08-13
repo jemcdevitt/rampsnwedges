@@ -17,6 +17,8 @@ import java.util.Optional;
 import org.bukkit.Material;
 import rampsnwedges.Configuration;
 
+import static rampsnwedges.RampsNWedgesPlugin.LOG;
+
 /**
  * Catalog of logical ramps and wedges enabled for this server.
  *
@@ -49,7 +51,8 @@ public class BlockCatalog {
 	private void add(CustomBlockDefinition definition) {
 		CustomBlockDefinition previous = blocksById.putIfAbsent(definition.id(), definition);
 		if(previous != null) {
-			throw new IllegalStateException("Duplicate custom block id: " + definition.id());
+			LOG(0,"Duplicate custom block id: " + definition.id());
+			return;
 		}
 		blocks.add(definition);
 	}

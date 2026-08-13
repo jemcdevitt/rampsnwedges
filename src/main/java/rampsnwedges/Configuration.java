@@ -10,9 +10,12 @@ package rampsnwedges;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.configuration.ConfigurationSection;
@@ -70,7 +73,22 @@ public class Configuration {
 		List<String> materialNames = cfg.getStringList("materials");
 		if(!materialNames.isEmpty()) {
 			for(String name : materialNames) {
-				blockMaterials.add(getVisualMaterial(name));
+				if( name.startsWith("#") ) {
+					LOG(0,"Loading tag %s", name);
+					Set<Material> tagMaterials = getTagMaterials(name);
+					if( tagMaterials == null ) {
+						LOG(0,"Didn't find the tag for %s", name);
+						continue;
+					}
+					for(Material tagMat : tagMaterials) {
+						if(!tagMat.isBlock() || tagMat.isAir()) {
+							continue;
+						}
+						blockMaterials.add(tagMat);
+					}
+				} else {
+					blockMaterials.add(getVisualMaterial(name));
+				}
 			}
 			LOG(0, "Found %d defined block materials", blockMaterials.size());
 			return;
@@ -108,6 +126,16 @@ public class Configuration {
 			LOG(1, "Using legacy materials.ramps/materials.wedges configuration; migrate to a single materials list");
 			LOG(0, "Found %d defined block materials", blockMaterials.size());
 		}
+	}
+
+	private Set<Material> getTagMaterials(String value) {
+		String tagName = value.substring(1).toLowerCase(Locale.ROOT);
+		Tag<Material> tag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, NamespacedKey.minecraft(tagName), Material.class);
+		if( tag == null ) {
+			LOG(1,"Unknown material tag: " + value);
+			return null;
+		}
+		return tag.getValues();
 	}
 
 	private Material getStairMaterial(String name) {

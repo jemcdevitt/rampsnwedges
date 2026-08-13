@@ -23,6 +23,8 @@ import org.joml.Matrix4f;
 import rampsnwedges.block.CustomBlockDefinition;
 import rampsnwedges.item.CustomItemFactory;
 
+import static rampsnwedges.RampsNWedgesPlugin.LOG;
+
 /**
  * Creates the visual projection for a placed ramp.
  *
@@ -71,6 +73,23 @@ public class RampDisplayManager {
 		});
 	}
 
+	public ItemDisplay getRampAt(Block block) {
+		Location center = block.getLocation().add(0.5, 0.5, 0.5);
+		for(Entity entity : block.getWorld().getNearbyEntities(center, 0.49, 0.49, 0.49)) {
+			if(!(entity instanceof ItemDisplay display)) {
+				continue;
+			}
+
+			PersistentDataContainer pdc = display.getPersistentDataContainer();
+			String type = pdc.get(Constants.RNW_TYPE_KEY, PersistentDataType.STRING);
+			if(!DISPLAY_TYPE.equals(type)) {
+				continue;
+			}
+			return display;
+		}
+		return null;
+	}
+	
 	public void remove(Block block) {
 		Location center = block.getLocation().add(0.5, 0.5, 0.5);
 
@@ -87,17 +106,23 @@ public class RampDisplayManager {
 			PersistentDataContainer pdc = display.getPersistentDataContainer();
 			String type = pdc.get(Constants.RNW_TYPE_KEY, PersistentDataType.STRING);
 			if(!DISPLAY_TYPE.equals(type)) {
+				LOG(0,"Not a ramp display");
 				continue;
 			}
 
+			//although the id is based on the original block location, it is possible for the
+			//new block location to be different as can happen if the block is part of a SimpleShips ship.
+			//so we're only checking that an ID exists.  The getNearbyEntities should have basically limited us
+			//to the block we're on so chances of picking up another item display are minimal.
+			//keeping the id still based on block location simply to keep it unique.
 			String rampId = pdc.get(Constants.RNW_RAMP_ID_KEY, PersistentDataType.STRING);
+			LOG(0,"Found ramp display id %s", rampId);
 			if(rampId == null) {
 				continue;
 			}
 
-			if(rampId.equals(genRampId(block))) {
-				display.remove();
-			}
+			LOG(0,"Removing ramp display %s", rampId);
+			display.remove();
 		}
 	}
 

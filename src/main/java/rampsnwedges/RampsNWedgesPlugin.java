@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import rampsnwedges.block.BlockCatalog;
 import rampsnwedges.block.BlockMaterial;
-import rampsnwedges.block.PlacedBlockStore;
+//import rampsnwedges.block.PlacedBlockStore;
 import rampsnwedges.item.CustomItemFactory;
 import rampsnwedges.recipe.RecipeRegistrar;
 import rampsnwedges.resource.ResourcePackGenerator;
@@ -29,7 +29,7 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 	public static Configuration configuration;
 	private BlockCatalog blockCatalog;
 	private CustomItemFactory itemFactory;
-	private PlacedBlockStore placedBlockStore;
+//	private PlacedBlockStore placedBlockStore;
 	private ResourcePackGenerator resourcePackGenerator;
 	private RampDisplayManager rampDisplayManager;
 	private WedgeDisplayManager wedgeDisplayManager;
@@ -43,7 +43,7 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 
 		blockCatalog = new BlockCatalog(configuration);
 		itemFactory = new CustomItemFactory(configuration);
-		placedBlockStore = new PlacedBlockStore();
+//		placedBlockStore = new PlacedBlockStore();
 		rampDisplayManager = new RampDisplayManager(itemFactory);
 		wedgeDisplayManager = new WedgeDisplayManager(itemFactory);
 
@@ -62,15 +62,9 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		RecipeRegistrar recipes = new RecipeRegistrar(this, blockCatalog, itemFactory, configuration);
 		recipes.registerAll();
 
-		getServer().getPluginManager().registerEvents(
-			new BlockPlaceListener(configuration, blockCatalog, itemFactory, placedBlockStore,
-				rampDisplayManager, wedgeDisplayManager), this);
-		getServer().getPluginManager().registerEvents(
-			new BlockBreakListener(blockCatalog, itemFactory, placedBlockStore,
-				rampDisplayManager, wedgeDisplayManager), this);
-		getServer().getPluginManager().registerEvents(
-			new WedgeBreakListener(this, blockCatalog, itemFactory, placedBlockStore,
-				wedgeDisplayManager), this);
+		getServer().getPluginManager().registerEvents(new BlockPlaceListener(configuration, blockCatalog, itemFactory, rampDisplayManager, wedgeDisplayManager), this);
+		getServer().getPluginManager().registerEvents(new BlockBreakListener(blockCatalog, itemFactory, configuration, rampDisplayManager, wedgeDisplayManager), this);
+		getServer().getPluginManager().registerEvents(new WedgeBreakListener(this, blockCatalog, itemFactory, configuration, wedgeDisplayManager), this);
 
 		LOG(0, "Ramps n Wedges plugin startup");
 	}
@@ -106,9 +100,9 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		return itemFactory;
 	}
 
-	public PlacedBlockStore placedBlockStore() {
-		return placedBlockStore;
-	}
+	// public PlacedBlockStore placedBlockStore() {
+	// 	return placedBlockStore;
+	// }
 
 	public ResourcePackGenerator resourcePackGenerator() {
 		return resourcePackGenerator;
