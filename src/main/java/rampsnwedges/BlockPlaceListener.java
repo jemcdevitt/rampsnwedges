@@ -18,14 +18,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import rampsnwedges.block.BlockCatalog;
 import rampsnwedges.block.CustomBlockDefinition;
-//import rampsnwedges.block.PlacedBlockStore;
 import rampsnwedges.item.CustomItemFactory;
 
 public class BlockPlaceListener implements Listener {
 	private final Configuration config;
 	private final BlockCatalog catalog;
 	private final CustomItemFactory itemFactory;
-//	private final PlacedBlockStore placedBlocks;
 	private final RampDisplayManager rampDisplays;
 	private final WedgeDisplayManager wedgeDisplays;
 
@@ -34,7 +32,6 @@ public class BlockPlaceListener implements Listener {
 		this.config = config;
 		this.catalog = catalog;
 		this.itemFactory = itemFactory;
-//		this.placedBlocks = placedBlocks;
 		this.rampDisplays = rampDisplays;
 		this.wedgeDisplays = wedgeDisplays;
 	}

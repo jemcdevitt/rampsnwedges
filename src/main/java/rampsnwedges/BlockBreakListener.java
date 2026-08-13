@@ -75,19 +75,11 @@ public class BlockBreakListener implements Listener {
 		CustomBlockDefinition definition = found.get();
 		event.setDropItems(false);
 
-		removeDisplay(block, definition);
+		itemDisplay.remove();
 
 		if(event.getPlayer().getGameMode() != GameMode.CREATIVE) {
 			ItemStack item = itemFactory.create(definition);
 			block.getWorld().dropItemNaturally(block.getLocation(), item);
-		}
-	}
-
-	private void removeDisplay(Block block, CustomBlockDefinition definition) {
-		if(definition.shape().isRamp()) {
-			rampDisplays.remove(block);
-		} else {
-			wedgeDisplays.remove(block);
 		}
 	}
 }

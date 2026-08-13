@@ -54,7 +54,6 @@ public class WedgeDisplayManager {
 			PersistentDataContainer pdc = display.getPersistentDataContainer();
 			pdc.set(Constants.RNW_TYPE_KEY, PersistentDataType.STRING, DISPLAY_TYPE);
 			pdc.set(Constants.RNW_ID_KEY, PersistentDataType.STRING, definition.id());
-			pdc.set(Constants.RNW_WEDGE_ID_KEY, PersistentDataType.STRING, genWedgeId(block));
 		});
 	}
 
@@ -90,22 +89,7 @@ public class WedgeDisplayManager {
 				continue;
 			}
 
-			//although the id is based on the original block location, it is possible for the
-			//new block location to be different as can happen if the block is part of a SimpleShips ship.
-			//so we're only checking that an ID exists.  The getNearbyEntities should have basically limited us
-			//to the block we're on so chances of picking up another item display are minimal.
-			//keeping the id still based on block location simply to keep it unique.
-			String wedgeId = pdc.get(Constants.RNW_WEDGE_ID_KEY, PersistentDataType.STRING);
-			LOG(0,"Found wedge id %s", wedgeId);
-			if( wedgeId == null )
-				continue;
-
-			LOG(0,"Removing wedge id %s", wedgeId);
 			display.remove();
 		}
-	}
-
-	private String genWedgeId(Block block) {
-		return "wedge_" + block.getX() + "_" + block.getY() + "_" + block.getZ();
 	}
 }

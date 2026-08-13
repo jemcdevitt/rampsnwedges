@@ -67,7 +67,6 @@ public class RampDisplayManager {
 			PersistentDataContainer pdc = display.getPersistentDataContainer();
 			pdc.set(Constants.RNW_TYPE_KEY, PersistentDataType.STRING, DISPLAY_TYPE);
 			pdc.set(Constants.RNW_ID_KEY, PersistentDataType.STRING, definition.id());
-			pdc.set(Constants.RNW_RAMP_ID_KEY, PersistentDataType.STRING, genRampId(block));
 
 			display.setTransformationMatrix(transformationFor(stairs));
 		});
@@ -89,42 +88,6 @@ public class RampDisplayManager {
 		}
 		return null;
 	}
-	
-	public void remove(Block block) {
-		Location center = block.getLocation().add(0.5, 0.5, 0.5);
-
-		/*
-		 * Displays are centered in their carrier block. A radius slightly
-		 * smaller than half a block finds our display without touching displays
-		 * attached to neighboring blocks.
-		 */
-		for(Entity entity : block.getWorld().getNearbyEntities(center, 0.49, 0.49, 0.49)) {
-			if(!(entity instanceof ItemDisplay display)) {
-				continue;
-			}
-
-			PersistentDataContainer pdc = display.getPersistentDataContainer();
-			String type = pdc.get(Constants.RNW_TYPE_KEY, PersistentDataType.STRING);
-			if(!DISPLAY_TYPE.equals(type)) {
-				LOG(0,"Not a ramp display");
-				continue;
-			}
-
-			//although the id is based on the original block location, it is possible for the
-			//new block location to be different as can happen if the block is part of a SimpleShips ship.
-			//so we're only checking that an ID exists.  The getNearbyEntities should have basically limited us
-			//to the block we're on so chances of picking up another item display are minimal.
-			//keeping the id still based on block location simply to keep it unique.
-			String rampId = pdc.get(Constants.RNW_RAMP_ID_KEY, PersistentDataType.STRING);
-			LOG(0,"Found ramp display id %s", rampId);
-			if(rampId == null) {
-				continue;
-			}
-
-			LOG(0,"Removing ramp display %s", rampId);
-			display.remove();
-		}
-	}
 
 	private Matrix4f transformationFor(Stairs stairs) {
 		Matrix4f matrix = new Matrix4f();
@@ -144,10 +107,6 @@ public class RampDisplayManager {
 		}
 
 		return matrix;
-	}
-
-	private String genRampId(Block block) {
-		return "ramp_" + block.getX() + "_" + block.getY() + "_" + block.getZ();
 	}
 
 	private float yRotation(BlockFace facing) {

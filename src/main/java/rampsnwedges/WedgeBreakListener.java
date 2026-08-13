@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -154,6 +156,11 @@ public class WedgeBreakListener implements Listener {
 		session.progress = Math.min(1.0F, session.progress + mining.progressPerTick);
 		player.sendBlockDamage(session.block.getLocation(), session.progress, player);
 
+		session.ticks++;
+		if(session.ticks % 4 == 0) {
+			spawnMiningParticles(session.block,	session.definition.material().material());
+		}
+
 		if(session.progress >= 1.0F) {
 			finishSession(player, session);
 			breakWedge(player, session.block, session.definition, mining.correctForDrops);
@@ -242,8 +249,9 @@ public class WedgeBreakListener implements Listener {
 		}
 	}
 
-	private void breakWedge(Player player, Block block, CustomBlockDefinition definition,
-						boolean dropItem) {
+	private void breakWedge(Player player, Block block, CustomBlockDefinition definition,	boolean dropItem) {
+
+		spawnBreakParticles(block, definition.material().material());
 		wedgeDisplays.remove(block);
 		block.setType(Material.AIR, false);
 
@@ -301,17 +309,39 @@ public class WedgeBreakListener implements Listener {
 			&& first.getZ() == second.getZ();
 	}
 
+	private void spawnMiningParticles(Block block, Material material) {
+		BlockData data = Bukkit.createBlockData(material);
+		Location location = block.getLocation().add(0.5, 0.5, 0.5);
+		
+		block.getWorld().spawnParticle(Particle.BLOCK, location, 4,
+																	 0.3, 0.3, 0.3,
+																	 0.05,
+																	 data);
+	}	
+
+	private void spawnBreakParticles(Block block, Material material) {
+		BlockData data = Bukkit.createBlockData(material);
+		Location location = block.getLocation().add(0.5, 0.5, 0.5);
+		
+		block.getWorld().spawnParticle(Particle.BLOCK,location, 20,
+																	 0.4, 0.4, 0.4,
+																	 0.12,
+																	 data);
+	}
+	
 	private static class BreakSession {
 		private final Block block;
 		private final CustomBlockDefinition definition;
 		private float progress;
 		private BukkitTask task;
+		private int ticks;
 
 		private BreakSession(Block block, CustomBlockDefinition definition) {
 			this.block = block;
 			this.definition = definition;
 		}
 	}
+	
 
 	private record MiningInfo(float progressPerTick, boolean correctForDrops) {
 	}

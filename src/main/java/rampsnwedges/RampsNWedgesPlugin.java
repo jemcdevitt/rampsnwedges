@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import rampsnwedges.block.BlockCatalog;
 import rampsnwedges.block.BlockMaterial;
-//import rampsnwedges.block.PlacedBlockStore;
 import rampsnwedges.item.CustomItemFactory;
 import rampsnwedges.recipe.RecipeRegistrar;
 import rampsnwedges.resource.ResourcePackGenerator;
@@ -29,7 +28,6 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 	public static Configuration configuration;
 	private BlockCatalog blockCatalog;
 	private CustomItemFactory itemFactory;
-//	private PlacedBlockStore placedBlockStore;
 	private ResourcePackGenerator resourcePackGenerator;
 	private RampDisplayManager rampDisplayManager;
 	private WedgeDisplayManager wedgeDisplayManager;
@@ -43,7 +41,6 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 
 		blockCatalog = new BlockCatalog(configuration);
 		itemFactory = new CustomItemFactory(configuration);
-//		placedBlockStore = new PlacedBlockStore();
 		rampDisplayManager = new RampDisplayManager(itemFactory);
 		wedgeDisplayManager = new WedgeDisplayManager(itemFactory);
 
