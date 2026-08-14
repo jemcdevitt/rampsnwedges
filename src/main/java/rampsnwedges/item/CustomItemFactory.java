@@ -35,10 +35,10 @@ public class CustomItemFactory {
 			itemMaterial = config.rampCarrier();
 		} else {
 			/*
-			 * A wedge must not be a barrier item; holding a barrier causes every
-			 * nearby barrier carrier to display its debug icon. Use the configured
+			 * Barrier-backed shapes must not themselves be barrier items; holding a
+			 * barrier causes every nearby carrier to display its debug icon. Use the
 			 * visual material itself as the ordinary placeable backing item and
-			 * replace it with the wedge carrier after placement.
+			 * replace it with the barrier carrier after placement.
 			 */
 			itemMaterial = definition.material().material();
 		}

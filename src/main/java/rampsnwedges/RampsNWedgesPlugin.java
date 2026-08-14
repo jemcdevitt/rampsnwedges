@@ -31,6 +31,8 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 	private ResourcePackGenerator resourcePackGenerator;
 	private RampDisplayManager rampDisplayManager;
 	private WedgeDisplayManager wedgeDisplayManager;
+	private HipDisplayManager hipDisplayManager;
+	private PyramidDisplayManager pyramidDisplayManager;
 
 	@Override
 	public void onEnable() {
@@ -43,6 +45,8 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		itemFactory = new CustomItemFactory(configuration);
 		rampDisplayManager = new RampDisplayManager(itemFactory);
 		wedgeDisplayManager = new WedgeDisplayManager(itemFactory);
+		hipDisplayManager = new HipDisplayManager(itemFactory);
+		pyramidDisplayManager = new PyramidDisplayManager(itemFactory);
 
 		resourcePackGenerator = new ResourcePackGenerator(this, blockCatalog, configuration);
 
@@ -59,9 +63,12 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		RecipeRegistrar recipes = new RecipeRegistrar(this, blockCatalog, itemFactory, configuration);
 		recipes.registerAll();
 
-		getServer().getPluginManager().registerEvents(new BlockPlaceListener(configuration, blockCatalog, itemFactory, rampDisplayManager, wedgeDisplayManager), this);
-		getServer().getPluginManager().registerEvents(new BlockBreakListener(blockCatalog, itemFactory, configuration, rampDisplayManager, wedgeDisplayManager), this);
-		getServer().getPluginManager().registerEvents(new WedgeBreakListener(this, blockCatalog, itemFactory, configuration, wedgeDisplayManager), this);
+		getServer().getPluginManager().registerEvents(new BlockPlaceListener(configuration, blockCatalog, itemFactory,
+																																				 rampDisplayManager, wedgeDisplayManager, hipDisplayManager, pyramidDisplayManager),
+																									this);
+		getServer().getPluginManager().registerEvents(new CustomBreakListener(this, blockCatalog, itemFactory, configuration,
+																																					rampDisplayManager, wedgeDisplayManager, hipDisplayManager, pyramidDisplayManager),
+																									this);
 
 		LOG(0, "Ramps n Wedges plugin startup");
 	}

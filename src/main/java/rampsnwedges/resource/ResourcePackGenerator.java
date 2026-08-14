@@ -29,8 +29,8 @@ import static rampsnwedges.RampsNWedgesPlugin.LOG;
  * Generates the client resource pack used by Ramps n Wedges.
  *
  * Ramps use one configured vanilla stair family as an invisible physical
- * carrier. Wedges use an invisible server-side carrier such as BARRIER and do
- * not require any vanilla model override. Every logical shape gets its own
+ * carrier. Wedges and hips use an invisible server-side carrier such as
+ * BARRIER and do not require any vanilla model override. Every logical shape gets its own
  * namespaced item/model definition used by both inventory items and persistent
  * ItemDisplays.
  */
@@ -41,8 +41,7 @@ public class ResourcePackGenerator {
 	private final BlockCatalog catalog;
 	private final Configuration config;
 
-	public ResourcePackGenerator(RampsNWedgesPlugin plugin, BlockCatalog catalog,
-								 Configuration config) {
+	public ResourcePackGenerator(RampsNWedgesPlugin plugin, BlockCatalog catalog, Configuration config) {
 		this.plugin = plugin;
 		this.catalog = catalog;
 		this.config = config;
@@ -84,8 +83,8 @@ public class ResourcePackGenerator {
 	}
 
 	/**
-	 * Generate one custom model and item definition for every configured ramp
-	 * and wedge. For the generalized material model we intentionally use the
+	 * Generate one custom model and item definition for every configured ramp,
+	 * wedge and hip. For the generalized material model we intentionally use the
 	 * conventional minecraft:block/<material-name> texture path. Blocks with
 	 * specialized multi-face models may therefore require future overrides.
 	 */
@@ -119,7 +118,7 @@ public class ResourcePackGenerator {
 				StandardOpenOption.TRUNCATE_EXISTING);
 
 			LOG(0, "Generated %s item model %s using %s",
-				definition.shape().isRamp() ? "ramp" : "wedge", id, texture);
+				definition.shape().id(), id, texture);
 		}
 	}
 
@@ -138,11 +137,15 @@ public class ResourcePackGenerator {
 	 * ensures the correct texture is used.
 	 */
 	private String textureName(Material material) {
-		String name = materialName(material);
-		if( name.endsWith("_wood")) {
-			name = name.substring(0,name.length() - "_wood".length()) + "_log";
+		String matName = materialName(material);
+		String textureName = null;
+
+		//never returns null
+		textureName = config.getTextureFor(matName);
+		if( textureName.endsWith("_wood")) {
+			textureName = textureName.substring(0,textureName.length() - "_wood".length()) + "_log";
 		}
-		return "minecraft:block/" + name;
+		return "minecraft:block/" + textureName;
 	}
 		
 	private String materialName(Material material) {
@@ -182,7 +185,7 @@ public class ResourcePackGenerator {
 			Ramps & Wedges Paper plugin.
 
 			It hides the configured vanilla stair carrier and creates
-			namespaced item models for each configured ramp and wedge.
+			namespaced item models for each configured ramp, wedge and hip.
 
 			Do not edit generated files manually.
 			""";

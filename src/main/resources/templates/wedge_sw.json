@@ -2,7 +2,8 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "all": "minecraft:block/stone"
+    "all": "minecraft:block/stone",
+    "particle": "minecraft:block/stone"
   },
   "elements": [
     {

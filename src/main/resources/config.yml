@@ -8,7 +8,7 @@ debug: true
 # all ramps while the generated resource pack is active. Its normal crafting
 # recipes are removed by the plugin.
 #
-# wedge-block is used only after a wedge is placed. BARRIER is recommended:
+# wedge-block is used after a wedge or hip is placed. BARRIER is recommended:
 # it is invisible, has full-block collision, has no normal recipe, and does
 # not cause adjacent solid block faces to be culled.
 carrier:
@@ -16,15 +16,101 @@ carrier:
   wedge-block: BARRIER
 
 # Every ordinary block listed here can be converted in the stonecutter into
-# one ramp and four wedge orientations. The same material supplies the visible
-# texture and, for wedges, its hardness/tool behavior when mined in Survival.
+# one ramp, four wedge orientations and four hip orientations. The same material
+# supplies the visible texture and its hardness/tool behavior when mined in Survival.
 #
 # The default generated model assumes minecraft:block/<material-name> is a
 # suitable single texture. Blocks with specialized multi-face textures may
 # render imperfectly; those can be handled with overrides in a future version.
 materials:
-  - OAK_PLANKS
-  - COBBLESTONE
+  - "#PLANKS"
+  - "#LOGS"
+  - "#WOOL"
+  - "#TERRACOTTA"
+  - "#BAMBOO_BLOCKS"
+  - "#CONCRETE"
+  - "#COPPER"
+  - "#MUD"
+  - EMERALD_BLOCK
+  - GOLD_BLOCK
+  - REDSTONE_BLOCK
   - STONE
+  - COBBLESTONE
+  - ANDESITE
+  - POLISHED_ANDESITE
+  - DIORITE
+  - POLISHED_DIORITE
+  - GRANITE
+  - POLISHED_GRANITE
+  - DEEPSLATE
+  - CHISELED_DEEPSLATE
+  - COBBLED_DEEPSLATE
+  - POLISHED_DEEPSLATE
+  - DEEPSLATE_BRICKS
+  - CRACKED_DEEPSLATE_BRICKS
+  - DEEPSLATE_TILES
+  - CRACKED_DEEPSLATE_TILES
+  - TUFF
+  - CHISELED_TUFF
+  - POLISHED_TUFF
+  - TUFF_BRICKS
+  - TUFF_BRICKS
+  - BRICKS
+  - PACKED_MUD
+  - MUD_BRICKS
+  - RESIN_BRICKS
+  - CHISELED_RESIN_BRICKS
+  - RED_SANDSTONE
+  - CHISELED_RED_SANDSTONE
+  - CUT_RED_SANDSTONE
+  - SMOOTH_RED_SANDSTONE
+  - SANDSTONE
+  - CHISELED_SANDSTONE
+  - CUT_SANDSTONE
+  - SMOOTH_SANDSTONE
+  - CINNABAR
+  - CHISELED_CINNABAR
+  - POLISHED_CINNABAR
+  - CINNABAR_BRICKS
+  - SULFUR
+  - CHISELED_SULFUR
+  - POLISHED_SULFUR
+  - SULFUR_BRICKS
+  - PRISMARINE
+  - PRISMARINE_BRICKS
+  - DARK_PRISMARINE
+  - BLACKSTONE
+  - POLISHED_BLACKSTONE
+  - CHISELED_POLISHED_BLACKSTONE
+  - MOSSY_COBBLESTONE
   - STONE_BRICKS
+  - MOSSY_STONE_BRICKS
+  - CRACKED_STONE_BRICKS
+  - CHISELED_STONE_BRICKS
   - OBSIDIAN
+  
+
+# Many minecraft blocks do not use textures that are named for them
+# they use other textures or parts of other textures.  For example,
+# smooth_red_sandtone uses the texture red_sandstone_top on all sides.
+#
+# This file will provide a mapping for only those blocks that don't
+# match their names or follow common patterns like all _wood blocks use
+# their _log texture.
+#
+# This map will be checked first before creating the texture name
+# from the block and if a mapping is found this will be used
+
+mapped-textures: 
+    crimson_hyphae : crimson_stem
+    muddy_mangrove_roots : muddy_mangrove_roots_side
+    smooth_red_sandstone : red_sandstone_top
+    smooth_sandstone : sandstone_top
+    stripped_crimson_hyphae : stripped_crimson_stem
+    stripped_warped_hyphae : stripped_warped_stem
+    warped_hyphae : warped_stem
+    waxed_copper_block : copper_block
+    waxed_exposed_copper : exposed_copper
+    waxed_oxidized_copper : oxidized_copper
+    waxed_weathered_copper : weathered_copper
+  

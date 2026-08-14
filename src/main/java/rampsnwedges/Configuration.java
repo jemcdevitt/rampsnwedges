@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,6 +33,7 @@ public class Configuration {
 	private Material rampCarrier;
 	private Material wedgeCarrier;
 	private List<Material> blockMaterials;
+	private Map<String,Object> mappedTextures;
 
 	Configuration(RampsNWedgesPlugin plugin) {
 		this.plugin = plugin;
@@ -54,6 +56,21 @@ public class Configuration {
 		return blockMaterials;
 	}
 
+	public String getTextureFor(String materialName) {
+		String name = null;
+		if( mappedTextures != null ) {
+			Object val  = mappedTextures.get(materialName);
+			if( val != null )
+				name = val.toString();
+
+			LOG(0,"Mapped '%s' to '%s'", materialName, name);
+		}
+		if( name == null )
+			name = materialName;
+
+		return name;
+	}
+
 	public void loadConfiguration() {
 		FileConfiguration cfg = plugin.getConfig();
 		if(cfg == null) {
@@ -64,6 +81,14 @@ public class Configuration {
 		debugOn = cfg.getBoolean("debug", false);
 		rampCarrier = getStairMaterial(cfg.getString("carrier.ramp-stair", "RED_SANDSTONE_STAIRS"));
 		wedgeCarrier = getBlockMaterial(cfg.getString("carrier.wedge-block", "BARRIER"));
+
+		if( cfg.contains("mapped-textures") ) {
+			mappedTextures = cfg.getConfigurationSection("mapped-textures").getValues(false);
+			LOG(0,"Found %d mapped textures", mappedTextures.size());
+		} else {
+			LOG(0, "No mapped textures defined");
+		}
+			
 		blockMaterials = new ArrayList<>();
 
 		/*

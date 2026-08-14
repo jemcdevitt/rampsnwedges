@@ -26,14 +26,19 @@ public class BlockPlaceListener implements Listener {
 	private final CustomItemFactory itemFactory;
 	private final RampDisplayManager rampDisplays;
 	private final WedgeDisplayManager wedgeDisplays;
-
+	private final HipDisplayManager hipDisplays;
+	private final PyramidDisplayManager pyramidDisplays;
+	
 	public BlockPlaceListener(Configuration config, BlockCatalog catalog, CustomItemFactory itemFactory,
-														RampDisplayManager rampDisplays,  WedgeDisplayManager wedgeDisplays) {
+														RampDisplayManager rampDisplays, WedgeDisplayManager wedgeDisplays,
+														HipDisplayManager hipDisplays, PyramidDisplayManager pyramidDisplays) {
 		this.config = config;
 		this.catalog = catalog;
 		this.itemFactory = itemFactory;
 		this.rampDisplays = rampDisplays;
 		this.wedgeDisplays = wedgeDisplays;
+		this.hipDisplays = hipDisplays;
+		this.pyramidDisplays = pyramidDisplays;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -53,10 +58,19 @@ public class BlockPlaceListener implements Listener {
 
 		if(definition.shape().isRamp()) {
 			placeRamp(block, definition);
-		} else {
+		} else if(definition.shape().isWedge()) {
 			placeWedge(block, definition);
+		} else if(definition.shape().isHip()) {
+			placeHip(block, definition);
+		} else if(definition.shape().isPyramid()) {
+			placePyramid(block,definition);
 		}
 	}
+
+	private void placePyramid(Block block, CustomBlockDefinition definition) {
+		block.setBlockData(Bukkit.createBlockData(config.wedgeCarrier()), false);
+		pyramidDisplays.create(block, definition);
+	}	
 
 	private void placeRamp(Block block, CustomBlockDefinition definition) {
 		/*
@@ -79,12 +93,12 @@ public class BlockPlaceListener implements Listener {
 	}
 
 	private void placeWedge(Block block, CustomBlockDefinition definition) {
-		/*
-		 * Wedge items are ordinary stair items in the inventory so holding one
-		 * never reveals nearby barrier carriers. Once Minecraft has accepted the
-		 * placement, replace that temporary stair with the invisible wedge carrier.
-		 */
 		block.setBlockData(Bukkit.createBlockData(config.wedgeCarrier()), false);
 		wedgeDisplays.create(block, definition);
+	}
+
+	private void placeHip(Block block, CustomBlockDefinition definition) {
+		block.setBlockData(Bukkit.createBlockData(config.wedgeCarrier()), false);
+		hipDisplays.create(block, definition);
 	}
 }

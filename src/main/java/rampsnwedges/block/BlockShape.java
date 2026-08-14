@@ -13,7 +13,12 @@ public enum BlockShape {
 	WEDGE_NE("wedge_ne", "Wedge Northeast", "templates/wedge_ne.json"),
 	WEDGE_NW("wedge_nw", "Wedge Northwest", "templates/wedge_nw.json"),
 	WEDGE_SE("wedge_se", "Wedge Southeast", "templates/wedge_se.json"),
-	WEDGE_SW("wedge_sw", "Wedge Southwest", "templates/wedge_sw.json");
+	WEDGE_SW("wedge_sw", "Wedge Southwest", "templates/wedge_sw.json"),
+	HIP_NE("hip_ne", "Hip Northeast", "templates/hip.json"),
+	HIP_NW("hip_nw", "Hip Northwest", "templates/hip.json"),
+	HIP_SE("hip_se", "Hip Southeast", "templates/hip.json"),
+	HIP_SW("hip_sw", "Hip Southwest", "templates/hip.json"),
+	PYRAMID("pyramid", "Pyramid", "templates/pyramid.json");
 
 	private final String id;
 	private final String displayName;
@@ -42,6 +47,20 @@ public enum BlockShape {
 	}
 
 	public boolean isWedge() {
-		return this != RAMP;
+		return this == WEDGE_NE || this == WEDGE_NW
+			|| this == WEDGE_SE || this == WEDGE_SW;
+	}
+
+	public boolean isHip() {
+		return this == HIP_NE || this == HIP_NW
+			|| this == HIP_SE || this == HIP_SW;
+	}
+
+	public boolean isPyramid() {
+		return this == PYRAMID;
+	}
+
+	public boolean usesBarrierCarrier() {
+		return isWedge() || isHip() || isPyramid();
 	}
 }
