@@ -95,9 +95,11 @@ public class ResourcePackGenerator {
 
 		for(CustomBlockDefinition definition : catalog.blocks()) {
 			String id = definition.id();
-			String texture = "minecraft:block/" + materialName(definition.material().material());
+			String texture = textureName(definition.material().material());
 			String template = loadTemplate(definition.shape().templateResource());
 			String model = applyMaterial(template, texture);
+
+			
 
 			Files.writeString(modelDirectory.resolve(id + ".json"), model,
 				StandardCharsets.UTF_8, StandardOpenOption.CREATE,
@@ -130,6 +132,19 @@ public class ResourcePackGenerator {
 		return template.replace(TEMPLATE_TEXTURE, texture);
 	}
 
+	/*
+	 * Blocks like stripped_oak_wood do not have their own
+	 * textures, they use the stripped_oak_log textures, so this
+	 * ensures the correct texture is used.
+	 */
+	private String textureName(Material material) {
+		String name = materialName(material);
+		if( name.endsWith("_wood")) {
+			name = name.substring(0,name.length() - "_wood".length()) + "_log";
+		}
+		return "minecraft:block/" + name;
+	}
+		
 	private String materialName(Material material) {
 		String key = material.getKey().asString();
 		int colon = key.indexOf(':');
