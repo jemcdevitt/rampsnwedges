@@ -58,13 +58,15 @@ public class CustomBreakListener implements Listener {
 	private final RampDisplayManager rampDisplays;
 	private final WedgeDisplayManager wedgeDisplays;
 	private final HipDisplayManager hipDisplays;
+	private final ValleyDisplayManager valleyDisplays;
 	private final PyramidDisplayManager pyramidDisplays;
 	private final Map<UUID, BreakSession> sessions = new HashMap<>();
 
 	public CustomBreakListener(RampsNWedgesPlugin plugin, BlockCatalog catalog,
 														 CustomItemFactory itemFactory, Configuration config,
 														 RampDisplayManager rampDisplays, WedgeDisplayManager wedgeDisplays,
-														 HipDisplayManager hipDisplays, PyramidDisplayManager pyramidDisplays) {
+														 HipDisplayManager hipDisplays, ValleyDisplayManager valleyDisplays,
+													 PyramidDisplayManager pyramidDisplays) {
 		this.plugin = plugin;
 		this.catalog = catalog;
 		this.itemFactory = itemFactory;
@@ -72,6 +74,7 @@ public class CustomBreakListener implements Listener {
 		this.rampDisplays = rampDisplays;
 		this.wedgeDisplays = wedgeDisplays;
 		this.hipDisplays = hipDisplays;
+		this.valleyDisplays = valleyDisplays;
 		this.pyramidDisplays = pyramidDisplays;
 	}
 
@@ -257,7 +260,10 @@ public class CustomBreakListener implements Listener {
 			if(display == null) {
 				display = hipDisplays.getHipAt(block);
 			}
-			if( display == null ) {
+			if(display == null) {
+				display = valleyDisplays.getValleyAt(block);
+			}
+			if(display == null) {
 				display = pyramidDisplays.getPyramidAt(block);
 			}
 		} else {

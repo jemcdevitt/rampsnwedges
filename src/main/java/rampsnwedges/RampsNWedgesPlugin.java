@@ -32,6 +32,7 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 	private RampDisplayManager rampDisplayManager;
 	private WedgeDisplayManager wedgeDisplayManager;
 	private HipDisplayManager hipDisplayManager;
+	private ValleyDisplayManager valleyDisplayManager;
 	private PyramidDisplayManager pyramidDisplayManager;
 
 	@Override
@@ -46,6 +47,7 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		rampDisplayManager = new RampDisplayManager(itemFactory);
 		wedgeDisplayManager = new WedgeDisplayManager(itemFactory);
 		hipDisplayManager = new HipDisplayManager(itemFactory);
+		valleyDisplayManager = new ValleyDisplayManager(itemFactory);
 		pyramidDisplayManager = new PyramidDisplayManager(itemFactory);
 
 		resourcePackGenerator = new ResourcePackGenerator(this, blockCatalog, configuration);
@@ -64,10 +66,10 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		recipes.registerAll();
 
 		getServer().getPluginManager().registerEvents(new BlockPlaceListener(configuration, blockCatalog, itemFactory,
-																																				 rampDisplayManager, wedgeDisplayManager, hipDisplayManager, pyramidDisplayManager),
+																																				 rampDisplayManager, wedgeDisplayManager, hipDisplayManager, valleyDisplayManager, pyramidDisplayManager),
 																									this);
 		getServer().getPluginManager().registerEvents(new CustomBreakListener(this, blockCatalog, itemFactory, configuration,
-																																					rampDisplayManager, wedgeDisplayManager, hipDisplayManager, pyramidDisplayManager),
+																																					rampDisplayManager, wedgeDisplayManager, hipDisplayManager, valleyDisplayManager, pyramidDisplayManager),
 																									this);
 
 		LOG(0, "Ramps n Wedges plugin startup");

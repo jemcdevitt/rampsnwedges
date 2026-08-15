@@ -22,6 +22,7 @@ import rampsnwedges.Configuration;
 import rampsnwedges.RampsNWedgesPlugin;
 import rampsnwedges.block.BlockCatalog;
 import rampsnwedges.block.CustomBlockDefinition;
+import rampsnwedges.block.BlockShape;
 
 import static rampsnwedges.RampsNWedgesPlugin.LOG;
 
@@ -29,13 +30,14 @@ import static rampsnwedges.RampsNWedgesPlugin.LOG;
  * Generates the client resource pack used by Ramps n Wedges.
  *
  * Ramps use one configured vanilla stair family as an invisible physical
- * carrier. Wedges and hips use an invisible server-side carrier such as
+ * carrier. Wedges, hips, valleys and pyramids use an invisible server-side carrier such as
  * BARRIER and do not require any vanilla model override. Every logical shape gets its own
  * namespaced item/model definition used by both inventory items and persistent
  * ItemDisplays.
  */
 public class ResourcePackGenerator {
 	private static final String TEMPLATE_TEXTURE = "minecraft:block/stone";
+	private static final String DISPLAY_BLOCK = "${DISPLAY_BLOCK}";
 
 	private final RampsNWedgesPlugin plugin;
 	private final BlockCatalog catalog;
@@ -84,7 +86,7 @@ public class ResourcePackGenerator {
 
 	/**
 	 * Generate one custom model and item definition for every configured ramp,
-	 * wedge and hip. For the generalized material model we intentionally use the
+	 * wedge, hip, valley and pyramid. For the generalized material model we intentionally use the
 	 * conventional minecraft:block/<material-name> texture path. Blocks with
 	 * specialized multi-face models may therefore require future overrides.
 	 */
@@ -96,6 +98,10 @@ public class ResourcePackGenerator {
 			String id = definition.id();
 			String texture = textureName(definition.material().material());
 			String template = loadTemplate(definition.shape().templateResource());
+
+			if( template.contains(DISPLAY_BLOCK) ) {
+				template = template.replace(DISPLAY_BLOCK, guiDisplay(definition.shape()));
+			}
 			String model = applyMaterial(template, texture);
 
 			
@@ -185,7 +191,7 @@ public class ResourcePackGenerator {
 			Ramps & Wedges Paper plugin.
 
 			It hides the configured vanilla stair carrier and creates
-			namespaced item models for each configured ramp, wedge and hip.
+			namespaced item models for each configured ramp, wedge, hip, valley and pyramid.
 
 			Do not edit generated files manually.
 			""";
@@ -232,6 +238,36 @@ public class ResourcePackGenerator {
 		}
 	}
 
+	//try and give the items in inventory distinct looks
+	private String guiDisplay(BlockShape shape) {
+		float xRotation;
+
+		if(shape.isInverted()) {
+			xRotation = 210.0f;
+		} else if (shape.isValley()) {
+			xRotation = 50.0f;
+		} else {
+			xRotation = 30.0f;
+		}
+
+		float yRotation = switch(shape.direction()) {
+			case NE -> 45.0f;
+			case NW -> 135.0f;
+			case SW -> 225.0f;
+			case SE -> 315.0f;
+			default -> 45.0f;
+		};
+
+		return """
+			"display" : {
+  			"gui": {
+	  			"rotation" : [%f, %f, 0],
+					"translation" : [0,0,0],
+					"scale" : [0.75, 0.75, 0.75]
+				}
+		}""".formatted(xRotation, yRotation);
+	}
+	
 	private static final class ZipGenerationException extends RuntimeException {
 		private final IOException ioException;
 

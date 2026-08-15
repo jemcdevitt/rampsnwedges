@@ -20,10 +20,10 @@ import rampsnwedges.Configuration;
 import static rampsnwedges.RampsNWedgesPlugin.LOG;
 
 /**
- * Catalog of logical ramps, wedges and hips enabled for this server.
+ * Catalog of logical ramps, wedges, hips and valleys enabled for this server.
  *
  * Every configured ordinary block material receives one ramp, all four
- * wedge orientations and all four hip orientations. Appearance, geometry and physical carrier are therefore
+ * wedge orientations, all four hip orientations and all four valley orientations. Appearance, geometry and physical carrier are therefore
  * independent concepts.
  */
 public class BlockCatalog {
@@ -40,16 +40,9 @@ public class BlockCatalog {
 			BlockMaterial blockMaterial = BlockMaterial.from(material);
 			materials.add(blockMaterial);
 
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.RAMP));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.WEDGE_NE));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.WEDGE_NW));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.WEDGE_SE));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.WEDGE_SW));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.HIP_NE));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.HIP_NW));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.HIP_SE));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.HIP_SW));
-			add(new CustomBlockDefinition(blockMaterial, BlockShape.PYRAMID));
+			for(BlockShape shape : BlockShape.values()) {
+				add(new CustomBlockDefinition(blockMaterial, shape));
+			}
 		}
 	}
 

@@ -23,24 +23,24 @@ import rampsnwedges.item.CustomItemFactory;
 import static rampsnwedges.RampsNWedgesPlugin.LOG;
 
 /**
- * Creates the visual projection for a placed hip.
+ * Creates the visual projection for a placed valley.
  *
- * Hips use the same invisible barrier carrier as wedges. All four logical hip
+ * Valleys use the same invisible barrier carrier as wedges. All four logical valley
  * orientations share one generated model; the ItemDisplay rotation selects
- * the required high/inward corner.
+ * the required high end of the diagonal trough.
  */
-public class HipDisplayManager {
-	private static final String DISPLAY_TYPE = "rnw_hip_display";
+public class ValleyDisplayManager {
+	private static final String DISPLAY_TYPE = "rnw_valley_display";
 
 	private final CustomItemFactory itemFactory;
 
-	public HipDisplayManager(CustomItemFactory itemFactory) {
+	public ValleyDisplayManager(CustomItemFactory itemFactory) {
 		this.itemFactory = itemFactory;
 	}
 
 	public ItemDisplay create(Block block, CustomBlockDefinition definition) {
-		if(!definition.shape().isHip()) {
-			throw new IllegalArgumentException("Hip display requires a hip definition");
+		if(!definition.shape().isValley()) {
+			throw new IllegalArgumentException("Valley display requires a valley definition");
 		}
 
 		ItemStack item = itemFactory.create(definition);
@@ -61,7 +61,7 @@ public class HipDisplayManager {
 		});
 	}
 
-	public ItemDisplay getHipAt(Block block) {
+	public ItemDisplay getValleyAt(Block block) {
 		Location center = block.getLocation().add(0.5, 0.5, 0.5);
 		for(Entity entity : block.getWorld().getNearbyEntities(center, 0.49, 0.49, 0.49)) {
 			if(!(entity instanceof ItemDisplay display)) {
@@ -78,7 +78,7 @@ public class HipDisplayManager {
 	}
 
 	public void remove(Block block) {
-		ItemDisplay display = getHipAt(block);
+		ItemDisplay display = getValleyAt(block);
 		if(display != null) {
 			display.remove();
 		}
@@ -86,24 +86,25 @@ public class HipDisplayManager {
 
 	private Matrix4f transformationFor(BlockShape shape) {
 		/*
-		 * The canonical hip template has its high/inward corner at southeast
+		 * The canonical valley template has its high end of the diagonal trough at southeast
 		 * (x=16,z=16). Rotate that one model for the other three orientations.
 		 */
 		float rotation = switch(shape) {
-			case HIP_SE -> 0.0F;
-			case HIP_NE -> (float)Math.toRadians(90.0);
-			case HIP_NW -> (float)Math.toRadians(180.0);
-			case HIP_SW -> (float)-Math.toRadians(90.0);
-			case HIP_SE_INVERTED -> 0.0F;
-			case HIP_NE_INVERTED -> (float)Math.toRadians(90.0);
-			case HIP_NW_INVERTED -> (float)Math.toRadians(180.0);
-			case HIP_SW_INVERTED -> (float)-Math.toRadians(90.0);
-			default -> throw new IllegalArgumentException("Unsupported hip shape: " + shape);
+			case VALLEY_SE -> 0.0F;
+			case VALLEY_NE -> (float)Math.toRadians(90.0);
+			case VALLEY_NW -> (float)Math.toRadians(180.0);
+			case VALLEY_SW -> (float)-Math.toRadians(90.0);
+			case VALLEY_SE_INVERTED -> 0.0F;
+			case VALLEY_NE_INVERTED -> (float)Math.toRadians(90.0);
+			case VALLEY_NW_INVERTED -> (float)Math.toRadians(180.0);
+			case VALLEY_SW_INVERTED -> (float)-Math.toRadians(90.0);
+			default -> throw new IllegalArgumentException("Unsupported valley shape: " + shape);
 		};
 
 		Matrix4f trans = new Matrix4f().rotateY(rotation);
 		if( shape.isInverted())
 			trans.rotateX((float)Math.PI);
+
 		return trans;
 	}
 }

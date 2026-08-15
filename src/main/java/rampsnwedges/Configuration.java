@@ -60,10 +60,10 @@ public class Configuration {
 		String name = null;
 		if( mappedTextures != null ) {
 			Object val  = mappedTextures.get(materialName);
-			if( val != null )
+			if( val != null ) {
 				name = val.toString();
-
-			LOG(0,"Mapped '%s' to '%s'", materialName, name);
+				LOG(0,"Mapped '%s' to '%s'", materialName, name);
+			}
 		}
 		if( name == null )
 			name = materialName;

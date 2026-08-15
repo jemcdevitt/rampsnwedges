@@ -27,17 +27,20 @@ public class BlockPlaceListener implements Listener {
 	private final RampDisplayManager rampDisplays;
 	private final WedgeDisplayManager wedgeDisplays;
 	private final HipDisplayManager hipDisplays;
+	private final ValleyDisplayManager valleyDisplays;
 	private final PyramidDisplayManager pyramidDisplays;
 	
 	public BlockPlaceListener(Configuration config, BlockCatalog catalog, CustomItemFactory itemFactory,
 														RampDisplayManager rampDisplays, WedgeDisplayManager wedgeDisplays,
-														HipDisplayManager hipDisplays, PyramidDisplayManager pyramidDisplays) {
+														HipDisplayManager hipDisplays, ValleyDisplayManager valleyDisplays,
+												PyramidDisplayManager pyramidDisplays) {
 		this.config = config;
 		this.catalog = catalog;
 		this.itemFactory = itemFactory;
 		this.rampDisplays = rampDisplays;
 		this.wedgeDisplays = wedgeDisplays;
 		this.hipDisplays = hipDisplays;
+		this.valleyDisplays = valleyDisplays;
 		this.pyramidDisplays = pyramidDisplays;
 	}
 
@@ -62,6 +65,8 @@ public class BlockPlaceListener implements Listener {
 			placeWedge(block, definition);
 		} else if(definition.shape().isHip()) {
 			placeHip(block, definition);
+		} else if(definition.shape().isValley()) {
+			placeValley(block, definition);
 		} else if(definition.shape().isPyramid()) {
 			placePyramid(block,definition);
 		}
@@ -100,5 +105,10 @@ public class BlockPlaceListener implements Listener {
 	private void placeHip(Block block, CustomBlockDefinition definition) {
 		block.setBlockData(Bukkit.createBlockData(config.wedgeCarrier()), false);
 		hipDisplays.create(block, definition);
+	}
+
+	private void placeValley(Block block, CustomBlockDefinition definition) {
+		block.setBlockData(Bukkit.createBlockData(config.wedgeCarrier()), false);
+		valleyDisplays.create(block, definition);
 	}
 }

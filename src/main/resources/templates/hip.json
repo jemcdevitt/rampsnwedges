@@ -5,6 +5,7 @@
     "all": "minecraft:block/stone",
     "particle": "minecraft:block/stone"
   },
+    ${DISPLAY_BLOCK},
   "elements": [
     {
       "from": [
