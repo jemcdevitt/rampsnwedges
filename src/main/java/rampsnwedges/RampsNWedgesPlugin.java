@@ -50,17 +50,23 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 		valleyDisplayManager = new ValleyDisplayManager(itemFactory);
 		pyramidDisplayManager = new PyramidDisplayManager(itemFactory);
 
-		resourcePackGenerator = new ResourcePackGenerator(this, blockCatalog, configuration);
-
-		try {
-			Path resourcePack = resourcePackGenerator.generate();
-			LOG(0, "Generated resource pack: %s", resourcePack);
-		} catch(IOException | RuntimeException e) {
-			logger.severe("Unable to generate resource pack: " + e.getMessage());
-			throw new IllegalStateException("Resource pack generation failed", e);
+		
+		if( configuration.shouldRegenResourcePack() ) {
+			resourcePackGenerator = new ResourcePackGenerator(this, blockCatalog, configuration);
+			try {
+				Path resourcePack = resourcePackGenerator.generate();
+				LOG(10, "Generated resource pack: %s", resourcePack);
+			} catch(IOException | RuntimeException e) {
+				logger.severe("Unable to generate resource pack: " + e.getMessage());
+				throw new IllegalStateException("Resource pack generation failed", e);
+			}
+		} else {
+			LOG(10,"Resource pack not regenerated");
 		}
 
-		logCatalog();
+		if( configuration.isDebugOn() ) {
+			logCatalog();
+		}
 
 		RecipeRegistrar recipes = new RecipeRegistrar(this, blockCatalog, itemFactory, configuration);
 		recipes.registerAll();
@@ -72,7 +78,7 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 																																					rampDisplayManager, wedgeDisplayManager, hipDisplayManager, valleyDisplayManager, pyramidDisplayManager),
 																									this);
 
-		LOG(0, "Ramps n Wedges plugin startup");
+		LOG(10, "Ramps n Wedges plugin startup");
 	}
 
 	public Configuration configuration() {
@@ -110,9 +116,9 @@ public class RampsNWedgesPlugin extends JavaPlugin {
 	// 	return placedBlockStore;
 	// }
 
-	public ResourcePackGenerator resourcePackGenerator() {
-		return resourcePackGenerator;
-	}
+	// public ResourcePackGenerator resourcePackGenerator() {
+	// 	return resourcePackGenerator;
+	// }
 
 	private void logCatalog() {
 		logger.info("Loaded " + blockCatalog.materials().size() + " materials producing "

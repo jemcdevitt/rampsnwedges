@@ -1,6 +1,7 @@
 # Ramps and wedges
 
 debug: true
+regen-resource-pack: false
 
 # Physical implementation blocks.
 #

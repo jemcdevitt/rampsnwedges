@@ -29,6 +29,7 @@ public class Configuration {
 
 	final RampsNWedgesPlugin plugin;
 	private boolean debugOn = DEBUG_ON_DEFAULT;
+	private boolean regenResourcePack = true;
 
 	private Material rampCarrier;
 	private Material wedgeCarrier;
@@ -42,6 +43,10 @@ public class Configuration {
 
 	public boolean isDebugOn() {
 		return debugOn;
+	}
+
+	public boolean shouldRegenResourcePack() {
+		return regenResourcePack;
 	}
 
 	public Material rampCarrier() {
@@ -79,6 +84,7 @@ public class Configuration {
 		}
 
 		debugOn = cfg.getBoolean("debug", false);
+		regenResourcePack = cfg.getBoolean("regen-resource-pack", true);
 		rampCarrier = getStairMaterial(cfg.getString("carrier.ramp-stair", "RED_SANDSTONE_STAIRS"));
 		wedgeCarrier = getBlockMaterial(cfg.getString("carrier.wedge-block", "BARRIER"));
 
